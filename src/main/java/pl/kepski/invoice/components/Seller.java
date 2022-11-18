@@ -1,4 +1,6 @@
-package pl.kepski.invoice;
+package pl.kepski.invoice.components;
+
+import pl.kepski.invoice.components.Company;
 
 public class Seller extends Company {
     private String bankAccountNumber;

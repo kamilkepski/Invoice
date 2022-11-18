@@ -1,4 +1,4 @@
-package pl.kepski.invoice;
+package pl.kepski.invoice.components;
 
 import java.io.Serializable;
 

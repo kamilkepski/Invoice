@@ -1,4 +1,4 @@
-package pl.kepski.invoice;
+package pl.kepski.invoice.components;
 
 public class Client extends Company {
     public Client() {}

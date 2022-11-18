@@ -7,4 +7,6 @@ module pl.kepski.invoice {
 
     opens pl.kepski.invoice to javafx.fxml;
     exports pl.kepski.invoice;
+    exports pl.kepski.invoice.components;
+    opens pl.kepski.invoice.components to javafx.fxml;
 }
