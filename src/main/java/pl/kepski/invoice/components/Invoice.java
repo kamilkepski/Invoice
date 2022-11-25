@@ -17,9 +17,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Invoice {
-    Client client = new Client();
-    Recipient recipient = new Recipient();
-    Seller seller = new Seller();
+    private Seller seller;
+
+    private Client client;
+
+    private Recipient recipient;
+
+    ArrayList<Product> products = new ArrayList<>();
+
+    ObservableList<Product> products_list = FXCollections.observableArrayList(products);
 
     public Invoice(Client client, Recipient recipient, Seller seller, ArrayList<Product> products) {
         this.client = client;
@@ -28,40 +34,21 @@ public class Invoice {
         this.products = products;
     }
 
-    public Client getClient() {
-        return client;
+    public void setSeller(Seller seller) {
+        this.seller = seller;
     }
 
     public void setClient(Client client) {
         this.client = client;
     }
 
-    public Recipient getRecipient() {
-        return recipient;
-    }
-
     public void setRecipient(Recipient recipient) {
         this.recipient = recipient;
-    }
-
-    public Seller getSeller() {
-        return seller;
-    }
-
-    public void setSeller(Seller seller) {
-        this.seller = seller;
-    }
-
-    public ArrayList<Product> getProducts() {
-        return products;
     }
 
     public void setProducts(ArrayList<Product> products) {
         this.products = products;
     }
-
-    ArrayList<Product> products = new ArrayList<>();
-    ObservableList<Product> products_list = FXCollections.observableArrayList(products);
 
     public void setProducts_list(ObservableList<Product> products_list) {
         this.products_list = products_list;
@@ -74,56 +61,31 @@ public class Invoice {
     private String paymentDeadline;
     private String paymentMethod;
 
-    public String getID() {
-        return ID;
-    }
-
     public void setID(String ID) {
         this.ID = ID;
-    }
-
-    public String getCity() {
-        return city;
     }
 
     public void setCity(String city) {
         this.city = city;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public LocalDate getSaleDate() {
-        return saleDate;
     }
 
     public void setSaleDate(LocalDate saleDate) {
         this.saleDate = saleDate;
     }
 
-    public String getPaymentDeadline() {
-        return paymentDeadline;
-    }
-
     public void setPaymentDeadline(String paymentDeadline) {
         this.paymentDeadline = paymentDeadline;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
     }
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 
-    public Invoice() {
-    }
+    public Invoice() {}
 
     public Invoice(String id, String city, LocalDate date, LocalDate saleDate, String paymentDeadline, String paymentMethod) {
         this.ID = id;
@@ -135,14 +97,15 @@ public class Invoice {
     }
 
     public void generate() throws IOException {
-        System.out.println(products_list);
-        System.out.println(client.getName());
+
         PDDocument document = new PDDocument();
         document.addPage(new PDPage());
         PDPage page = document.getPage(0);
+
         int pageHeight = (int) page.getTrimBox().getHeight();
         PDFont fontBold = PDType0Font.load(document, new File("src/main/resources/pl/kepski/invoice/fonts/lexendbold.ttf"));
         PDFont fontRegular = PDType0Font.load(document, new File("src/main/resources/pl/kepski/invoice/fonts/lexendregular.ttf"));
+
         try (@Deprecated PDPageContentStream contentWriter = new PDPageContentStream(document, page, false, false))
         {
             //City and dates
@@ -156,7 +119,6 @@ public class Invoice {
             contentWriter.newLine();
             contentWriter.showText("Data sprzedaży: " + saleDate);
             contentWriter.endText();
-
 
             //Invoice number
             contentWriter.beginText();
@@ -229,12 +191,9 @@ public class Invoice {
                 contentWriter.endText();
                 recipient = null;
                 Recipient.instanceExists = false;
-
             } else {
                 System.out.println("Brak odbiorcy");
-                //returnStatus("Brak odbiorcy.");
             }
-
 
             contentWriter.setStrokingColor(Color.DARK_GRAY);
             contentWriter.setLineWidth(1);
@@ -243,18 +202,16 @@ public class Invoice {
             int initY = pageHeight-240;
             int cellHeight = 30;
             int cellWidth;
-
             int colCount = 9;
-
             String[] tableHeaders = new String[] {"LP", "Nazwa towaru/usługi", "Jm.", "Ilość", "Cena  netto", "Kwota netto", "VAT", "Kwota VAT", "Kwota brutto"};
             String[] summaryTableHeaders = new String[] {"", "Kwota netto", "Kwota VAT", "Kwota brutto", "RAZEM"};
 
             for (int j = 1; j <= colCount; j++) {
-                if (j == 2) {
-                    cellWidth = 170;
-                    contentWriter.addRect(initX, initY, cellWidth, -cellHeight);
-                } else if (j == 1) {
+                if (j == 1) {
                     cellWidth = 25;
+                    contentWriter.addRect(initX, initY, cellWidth, -cellHeight);
+                } else if (j == 2) {
+                    cellWidth = 170;
                     contentWriter.addRect(initX, initY, cellWidth, -cellHeight);
                 } else {
                     cellWidth = 50;
@@ -362,7 +319,6 @@ public class Invoice {
                         cellWidth = 50;
                         contentWriter.addRect(initX, initY, cellWidth, -cellHeight);
                     }
-
                     initX += cellWidth;
                 }
                 initX = 30;
@@ -480,17 +436,6 @@ public class Invoice {
             contentWriter.showText("Faktura - darmowy program | Autor: Kamil Kępski");
             contentWriter.endText();
         } catch(RuntimeException e) {
-//            generate_status.setText("Wystąpił błąd!");
-//            generate_status.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.RED, new CornerRadii(5), null)));
-//            generate_status.setVisible(true);
-//            generate_status.setStyle("-fx-text-fill: white");
-//            PauseTransition visiblePause = new PauseTransition(
-//                    Duration.seconds(2)
-//            );
-//            visiblePause.setOnFinished(
-//                    event -> generate_status.setVisible(false)
-//            );
-//            visiblePause.play();
             throw new RuntimeException(e);
         }
 
@@ -506,16 +451,5 @@ public class Invoice {
             document.save("faktura"+ID+".pdf");
         }
         document.close();
-//        generate_status.setText("Faktura gotowa!");
-//        generate_status.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.rgb(178, 252, 251), new CornerRadii(5), null)));
-//        generate_status.setStyle("-fx-text-fill: black");
-//        generate_status.setVisible(true);
-//        PauseTransition visiblePause = new PauseTransition(
-//                Duration.seconds(2)
-//        );
-//        visiblePause.setOnFinished(
-//                event -> generate_status.setVisible(false)
-//        );
-//        visiblePause.play();
     }
 }

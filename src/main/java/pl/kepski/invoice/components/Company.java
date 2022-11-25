@@ -2,7 +2,7 @@ package pl.kepski.invoice.components;
 
 import java.io.Serializable;
 
-public class Company implements Serializable {
+public abstract class Company implements Serializable {
     public Company() {}
 
     public Company(String name, String address, String city, String country, String id) {

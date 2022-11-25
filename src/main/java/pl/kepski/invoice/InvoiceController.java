@@ -12,15 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import pl.kepski.invoice.components.*;
 
-import java.awt.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,13 +21,19 @@ import java.util.ArrayList;
 public class InvoiceController {
 
     Invoice invoice = new Invoice();
+
     Client client = new Client();
+
     Recipient recipient = new Recipient();
+
     Seller seller = new Seller();
+
     ArrayList<Product> products = new ArrayList<>();
+
     ArrayList<Client> clients = new ArrayList<>();
 
     ObservableList<Product> products_list = FXCollections.observableArrayList(products);
+
     ObservableList<Client> clients_list = FXCollections.observableArrayList(clients);
 
     @FXML
@@ -171,32 +170,46 @@ public class InvoiceController {
 
     @FXML
     private TextField recipient_name;
+
     @FXML
     private TextField recipient_city;
+
     @FXML
     private TextField recipient_address;
+
     @FXML
     private TextField recipient_country;
+
     @FXML
     private TextField recipient_nip;
+
     @FXML
     private Pane start_pane;
+
     @FXML
     private Button start_btn;
+
     @FXML
     private Button new_invoice;
+
     @FXML
     private Button author_btn;
+
     @FXML
     private Pane author_pane;
+
     @FXML
     private Pane clients_list_pane;
+
     @FXML
     private TableView<Client> see_clients;
+
     @FXML
     private TableColumn<Client, String> clientName;
+
     @FXML
     private TableColumn<Client, String> clientID;
+
     @FXML
     private Button client_list_btn;
 
@@ -323,6 +336,7 @@ public class InvoiceController {
             productTax.setCellValueFactory(new PropertyValueFactory<>("productTaxValue"));
             edit_products_table.setItems(products_list);
             delete_product_pane.setVisible(true);
+
         } else if (event.getSource() == start_btn) {
             client_pane.setVisible(false);
             clients_list_pane.setVisible(false);
@@ -335,6 +349,7 @@ public class InvoiceController {
             author_pane.setVisible(false);
             header_label.setText("");
             start_pane.setVisible(true);
+
         } else if (event.getSource() == author_btn) {
             client_pane.setVisible(false);
             clients_list_pane.setVisible(false);
@@ -347,11 +362,11 @@ public class InvoiceController {
             start_pane.setVisible(false);
             header_label.setText("O autorze");
             author_pane.setVisible(true);
+
         } else if (event.getSource() == client_list_btn) {
             clients.clear();
             clients_list.clear();
-            try
-            {
+            try {
                 FileInputStream fis = new FileInputStream("clientsData");
                 ObjectInputStream ois = new ObjectInputStream(fis);
 
@@ -359,13 +374,10 @@ public class InvoiceController {
 
                 ois.close();
                 fis.close();
-            }
-            catch (IOException ioe)
-            {
+
+            } catch (IOException ioe) {
                 ioe.printStackTrace();
-            }
-            catch (ClassNotFoundException c)
-            {
+            } catch (ClassNotFoundException c) {
                 System.out.println("Class not found");
                 c.printStackTrace();
             }
@@ -413,7 +425,7 @@ public class InvoiceController {
     }
 
     public void saveProduct() {
-        products_list.add(new Product(product_name.getText(), product_measure.getText(), Integer.parseInt(product_amount.getText()), Float.parseFloat(product_price.getText()), Integer.parseInt(product_tax_value.getValue().toString())));
+        products_list.add(new Product(product_name.getText(), product_measure.getText(), Integer.parseInt(product_amount.getText()), Float.parseFloat(product_price.getText()), Integer.parseInt(product_tax_value.getValue())));
         invoice.setProducts_list(products_list);
         System.out.println(products_list);
         returnStatus("Dodano!");
@@ -513,7 +525,36 @@ public class InvoiceController {
         recipient_nip.clear();
         returnStatus("Wyczyszczono!");
     }
-    public void generateInvoice() throws IOException {
-        invoice.generate();
+
+    public void generateInvoice() {
+        try {
+            invoice.generate();
+            generate_status.setText("Faktura gotowa!");
+            generate_status.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.rgb(178, 252, 251), new CornerRadii(5), null)));
+            generate_status.setStyle("-fx-text-fill: black");
+            generate_status.setVisible(true);
+            PauseTransition visiblePause = new PauseTransition(
+                    Duration.seconds(2)
+            );
+            visiblePause.setOnFinished(
+                    event -> generate_status.setVisible(false)
+            );
+            visiblePause.play();
+        }
+        catch(RuntimeException | IOException e) {
+            generate_status.setText("Wystąpił błąd!");
+            generate_status.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.RED, new CornerRadii(5), null)));
+            generate_status.setVisible(true);
+            generate_status.setStyle("-fx-text-fill: white");
+            PauseTransition visiblePause = new PauseTransition(
+                    Duration.seconds(2)
+            );
+            visiblePause.setOnFinished(
+                    event -> generate_status.setVisible(false)
+            );
+            visiblePause.play();
+        }
+
+
     }
 }
