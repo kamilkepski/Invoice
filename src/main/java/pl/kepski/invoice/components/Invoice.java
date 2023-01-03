@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Invoice {
+
     private Seller seller;
 
     private Client client;
@@ -96,6 +97,16 @@ public class Invoice {
         this.paymentMethod = paymentMethod;
     }
 
+    private void addTextToInvoice(String text, PDPageContentStream pdPageContentStream) throws IOException {
+        pdPageContentStream.showText(text);
+        pdPageContentStream.newLine();
+    }
+
+    private void addTextToInvoice(String text, String value, PDPageContentStream pdPageContentStream) throws IOException {
+        pdPageContentStream.showText(text + " " + value);
+        pdPageContentStream.newLine();
+    }
+
     public void generate() throws IOException {
 
         PDDocument document = new PDDocument();
@@ -113,11 +124,9 @@ public class Invoice {
             contentWriter.newLineAtOffset(380,770);
             contentWriter.setLeading(18.5f);
             contentWriter.setFont(fontRegular, 12);
-            contentWriter.showText("Miejscowość: " + city);
-            contentWriter.newLine();
-            contentWriter.showText("Data wystawienia: " + date);
-            contentWriter.newLine();
-            contentWriter.showText("Data sprzedaży: " + saleDate);
+            addTextToInvoice("Miejscowość:", city, contentWriter);
+            addTextToInvoice("Data wystawienia:", String.valueOf(date), contentWriter);
+            addTextToInvoice("Data sprzedaży:", String.valueOf(saleDate), contentWriter);
             contentWriter.endText();
 
             //Invoice number
@@ -133,20 +142,14 @@ public class Invoice {
             contentWriter.newLineAtOffset(30,773);
             contentWriter.setFont(fontBold, 12);
             contentWriter.setLeading(14.5f);
-            contentWriter.showText("SPRZEDAWCA");
-            contentWriter.newLine();
+            addTextToInvoice("SPRZEDAWCA", contentWriter);
             contentWriter.setFont(fontRegular, 12);
-            contentWriter.showText(seller.getName());
-            contentWriter.newLine();
-            contentWriter.showText(seller.getCity());
-            contentWriter.newLine();
-            contentWriter.showText(seller.getAddress());
-            contentWriter.newLine();
-            contentWriter.showText(seller.getCountry());
-            contentWriter.newLine();
-            contentWriter.showText("NIP " + seller.getId());
-            contentWriter.newLine();
-            contentWriter.showText("Numer konta " + seller.getBankAccountNumber());
+            addTextToInvoice(seller.getName(), contentWriter);
+            addTextToInvoice(seller.getCity(), contentWriter);
+            addTextToInvoice(seller.getAddress(), contentWriter);
+            addTextToInvoice(seller.getCountry(), contentWriter);
+            addTextToInvoice("NIP", seller.getId(), contentWriter);
+            addTextToInvoice("Numer konta", seller.getBankAccountNumber(), contentWriter);
             contentWriter.endText();
 
             //Client data
@@ -155,18 +158,13 @@ public class Invoice {
             contentWriter.newLineAtOffset(30,643);
             contentWriter.setFont(fontBold, 12);
             contentWriter.setLeading(14.5f);
-            contentWriter.showText("NABYWCA");
-            contentWriter.newLine();
+            addTextToInvoice("NABYWCA", contentWriter);
             contentWriter.setFont(fontRegular, 12);
-            contentWriter.showText(client.getName());
-            contentWriter.newLine();
-            contentWriter.showText(client.getAddress());
-            contentWriter.newLine();
-            contentWriter.showText(client.getCity());
-            contentWriter.newLine();
-            contentWriter.showText(client.getCountry());
-            contentWriter.newLine();
-            contentWriter.showText("NIP " + client.getId());
+            addTextToInvoice(client.getName(), contentWriter);
+            addTextToInvoice(client.getAddress(), contentWriter);
+            addTextToInvoice(client.getCity(), contentWriter);
+            addTextToInvoice(client.getCountry(), contentWriter);
+            addTextToInvoice("NIP", client.getId(), contentWriter);
             contentWriter.endText();
 
             //Recipient data
@@ -176,18 +174,13 @@ public class Invoice {
                 contentWriter.newLineAtOffset(380,643);
                 contentWriter.setFont(fontBold, 12);
                 contentWriter.setLeading(14.5f);
-                contentWriter.showText("ODBIORCA");
-                contentWriter.newLine();
+                addTextToInvoice("ODBIORCA", contentWriter);
                 contentWriter.setFont(fontRegular, 12);
-                contentWriter.showText(recipient.getName());
-                contentWriter.newLine();
-                contentWriter.showText(recipient.getAddress());
-                contentWriter.newLine();
-                contentWriter.showText(recipient.getCity());
-                contentWriter.newLine();
-                contentWriter.showText(recipient.getCountry());
-                contentWriter.newLine();
-                contentWriter.showText("NIP " + recipient.getId());
+                addTextToInvoice(recipient.getName(), contentWriter);
+                addTextToInvoice(recipient.getAddress(), contentWriter);
+                addTextToInvoice(recipient.getCity(), contentWriter);
+                addTextToInvoice(recipient.getCountry(), contentWriter);
+                addTextToInvoice("NIP", recipient.getId(), contentWriter);
                 contentWriter.endText();
                 recipient = null;
                 Recipient.instanceExists = false;
@@ -407,9 +400,8 @@ public class Invoice {
             contentWriter.newLineAtOffset(30,initY-70);
             contentWriter.setFont(fontRegular, 12);
             contentWriter.setLeading(14.5f);
-            contentWriter.showText("Termin płatności: " + paymentDeadline);
-            contentWriter.newLine();
-            contentWriter.showText("Metoda płatności: " + paymentMethod);
+            addTextToInvoice("Termin płatności:", paymentDeadline, contentWriter);
+            addTextToInvoice("Metoda płatności:", paymentMethod, contentWriter);
             contentWriter.endText();
 
             contentWriter.beginText();
