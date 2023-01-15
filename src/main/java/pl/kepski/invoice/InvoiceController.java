@@ -17,6 +17,7 @@ import pl.kepski.invoice.components.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class InvoiceController {
 
@@ -36,182 +37,76 @@ public class InvoiceController {
 
     ObservableList<Client> clients_list = FXCollections.observableArrayList(clients);
 
-    @FXML
-    private Label generate_status;
+    // Buttons
+    @FXML private Button client_btn;
+    @FXML private Button seller_btn;
+    @FXML private Button settings_btn;
+    @FXML private Button product_btn;
+    @FXML private Button prd_add_btn;
+    @FXML private Button prd_delete_btn;
+    @FXML private Button client2_add_btn;
+    @FXML private Button start_btn;
+    @FXML private Button new_invoice;
+    @FXML private Button author_btn;
+    @FXML private Button client_list_btn;
 
-    @FXML
-    private Button client_btn;
+    // Panes
+    List<Pane> panesList;
+    @FXML private GridPane client_pane;
+    @FXML private GridPane seller_pane;
+    @FXML private GridPane settings_pane;
+    @FXML private Pane product_pane;
+    @FXML private Pane add_product_pane;
+    @FXML private Pane client_pane2;
+    @FXML private Pane start_pane;
+    @FXML private Pane author_pane;
+    @FXML private Pane clients_list_pane;
+    @FXML private Pane delete_product_pane;
 
-    @FXML
-    private Button seller_btn;
+    // TextFields
+    @FXML private TextField invoice_id;
+    @FXML private TextField invoice_city;
+    @FXML private TextField invoice_payment_time;
+    @FXML private TextField client_address;
+    @FXML private TextField client_city;
+    @FXML private TextField client_country;
+    @FXML private TextField client_name;
+    @FXML private TextField client_nip;
+    @FXML private TextField seller_city;
+    @FXML private TextField seller_country;
+    @FXML private TextField seller_name;
+    @FXML private TextField seller_nip;
+    @FXML private TextField seller_address;
+    @FXML private TextField seller_bank;
+    @FXML private TextField recipient_name;
+    @FXML private TextField recipient_city;
+    @FXML private TextField recipient_address;
+    @FXML private TextField recipient_country;
+    @FXML private TextField recipient_nip;
+    @FXML private TextField product_name;
+    @FXML private TextField product_measure;
+    @FXML private TextField product_amount;
+    @FXML private TextField product_price;
 
-    @FXML
-    private Button settings_btn;
+    @FXML private Label header_label;
+    @FXML private Label generate_status;
 
-    @FXML
-    private Label header_label;
+    @FXML private DatePicker invoice_date;
+    @FXML private DatePicker sell_date;
 
-    @FXML
-    private GridPane client_pane;
+    @FXML private ChoiceBox<String> product_tax_value;
+    @FXML private ChoiceBox<String> invoice_payment_method;
 
-    @FXML
-    private GridPane seller_pane;
+    @FXML private TableView<Product> edit_products_table;
+    @FXML private TableColumn<Product, String> productName;
+    @FXML private TableColumn<Product, String> productMeasure;
+    @FXML private TableColumn<Product, Integer> productAmount;
+    @FXML private TableColumn<Product, Float> productPrice;
+    @FXML private TableColumn<Product, Integer> productTax;
 
-    @FXML
-    private GridPane settings_pane;
-
-    @FXML
-    private TextField client_address;
-
-    @FXML
-    private TextField client_city;
-
-    @FXML
-    private TextField client_country;
-
-    @FXML
-    private TextField client_name;
-
-    @FXML
-    private TextField client_nip;
-
-    @FXML
-    private TextField seller_city;
-
-    @FXML
-    private TextField seller_country;
-
-    @FXML
-    private TextField seller_name;
-
-    @FXML
-    private TextField seller_nip;
-
-    @FXML
-    private TextField seller_address;
-
-    @FXML
-    private TextField seller_bank;
-
-    @FXML
-    private TextField invoice_id;
-
-    @FXML
-    private TextField invoice_city;
-
-    @FXML
-    private DatePicker invoice_date;
-
-    @FXML
-    private DatePicker sell_date;
-
-    @FXML
-    private Button product_btn;
-
-    @FXML
-    private Pane product_pane;
-
-    @FXML
-    private TextField product_name;
-
-    @FXML
-    private TextField product_measure;
-
-    @FXML
-    private TextField product_amount;
-
-    @FXML
-    private TextField product_price;
-
-    @FXML
-    private ChoiceBox<String> product_tax_value;
-
-    @FXML
-    private ChoiceBox<String> invoice_payment_method;
-
-    @FXML
-    private Pane add_product_pane;
-
-    @FXML
-    private Button prd_add_btn;
-
-    @FXML
-    private Button prd_delete_btn;
-
-    @FXML
-    private TableView<Product> edit_products_table;
-
-    @FXML
-    private TableColumn<Product, String> productName;
-
-    @FXML
-    private TableColumn<Product, String> productMeasure;
-
-    @FXML
-    private TableColumn<Product, Integer> productAmount;
-
-    @FXML
-    private TableColumn<Product, Float> productPrice;
-
-    @FXML
-    private TableColumn<Product, Integer> productTax;
-
-    @FXML
-    private Pane delete_product_pane;
-
-    @FXML
-    private TextField invoice_payment_time;
-
-    @FXML
-    private Button client2_add_btn;
-
-    @FXML
-    private Pane client_pane2;
-
-    @FXML
-    private TextField recipient_name;
-
-    @FXML
-    private TextField recipient_city;
-
-    @FXML
-    private TextField recipient_address;
-
-    @FXML
-    private TextField recipient_country;
-
-    @FXML
-    private TextField recipient_nip;
-
-    @FXML
-    private Pane start_pane;
-
-    @FXML
-    private Button start_btn;
-
-    @FXML
-    private Button new_invoice;
-
-    @FXML
-    private Button author_btn;
-
-    @FXML
-    private Pane author_pane;
-
-    @FXML
-    private Pane clients_list_pane;
-
-    @FXML
-    private TableView<Client> see_clients;
-
-    @FXML
-    private TableColumn<Client, String> clientName;
-
-    @FXML
-    private TableColumn<Client, String> clientID;
-
-    @FXML
-    private Button client_list_btn;
+    @FXML private TableView<Client> see_clients;
+    @FXML private TableColumn<Client, String> clientName;
+    @FXML private TableColumn<Client, String> clientID;
 
     @FXML
     public void initialize() {
@@ -221,6 +116,8 @@ public class InvoiceController {
         invoice_payment_method.getItems().removeAll(invoice_payment_method.getItems());
         invoice_payment_method.getItems().addAll("Gotówka", "Przelew");
         invoice_payment_method.getSelectionModel().select("Gotówka");
+        panesList = List.of(product_pane, add_product_pane, delete_product_pane, client_pane2,
+                start_pane, clients_list_pane, client_pane, settings_pane, seller_pane, author_pane);
     }
 
     public void returnStatus(String statusMessage) {
@@ -237,97 +134,45 @@ public class InvoiceController {
         visiblePause.play();
     }
 
+    private void hideAllPanes() {
+        panesList.forEach(pane -> pane.setVisible(false));
+    }
+
     public void changeView(ActionEvent event) {
         if (event.getSource() == client_btn || event.getSource() == new_invoice) {
-            seller_pane.setVisible(false);
-            settings_pane.setVisible(false);
-            product_pane.setVisible(false);
-            clients_list_pane.setVisible(false);
-            author_pane.setVisible(false);
-            add_product_pane.setVisible(false);
-            delete_product_pane.setVisible(false);
-            client_pane2.setVisible(false);
-            start_pane.setVisible(false);
+            hideAllPanes();
             header_label.setText("Dane nabywcy");
             client_pane.setVisible(true);
 
         } else if (event.getSource() == client2_add_btn) {
-            seller_pane.setVisible(false);
-            settings_pane.setVisible(false);
-            clients_list_pane.setVisible(false);
-            product_pane.setVisible(false);
-            author_pane.setVisible(false);
-            client_pane.setVisible(false);
-            add_product_pane.setVisible(false);
-            delete_product_pane.setVisible(false);
-            start_pane.setVisible(false);
+            hideAllPanes();
             header_label.setText("Dane odbiorcy");
             client_pane2.setVisible(true);
 
         } else if (event.getSource() == seller_btn) {
-            client_pane.setVisible(false);
-            settings_pane.setVisible(false);
-            author_pane.setVisible(false);
-            clients_list_pane.setVisible(false);
-            product_pane.setVisible(false);
-            add_product_pane.setVisible(false);
-            delete_product_pane.setVisible(false);
-            client_pane2.setVisible(false);
-            start_pane.setVisible(false);
+            hideAllPanes();
             header_label.setText("Dane sprzedawcy");
             seller_pane.setVisible(true);
 
         } else if (event.getSource() == settings_btn) {
-            client_pane.setVisible(false);
-            seller_pane.setVisible(false);
-            product_pane.setVisible(false);
-            clients_list_pane.setVisible(false);
-            author_pane.setVisible(false);
-            add_product_pane.setVisible(false);
-            delete_product_pane.setVisible(false);
-            client_pane2.setVisible(false);
-            start_pane.setVisible(false);
+            hideAllPanes();
             invoice_date.setValue(LocalDate.now());
             sell_date.setValue(LocalDate.now());
             header_label.setText("Ustawienia");
             settings_pane.setVisible(true);
 
         } else if (event.getSource() == product_btn) {
-            client_pane.setVisible(false);
-            seller_pane.setVisible(false);
-            author_pane.setVisible(false);
-            clients_list_pane.setVisible(false);
-            settings_pane.setVisible(false);
-            add_product_pane.setVisible(false);
-            client_pane2.setVisible(false);
-            delete_product_pane.setVisible(false);
-            start_pane.setVisible(false);
+            hideAllPanes();
             header_label.setText("Produkty/usługi");
             product_pane.setVisible(true);
 
         } else if (event.getSource() == prd_add_btn) {
-            client_pane.setVisible(false);
-            seller_pane.setVisible(false);
-            clients_list_pane.setVisible(false);
-            settings_pane.setVisible(false);
-            author_pane.setVisible(false);
-            product_pane.setVisible(false);
-            client_pane2.setVisible(false);
-            delete_product_pane.setVisible(false);
-            start_pane.setVisible(false);
+            hideAllPanes();
             header_label.setText("Dodawanie produktu/usługi");
             add_product_pane.setVisible(true);
 
         } else if (event.getSource() == prd_delete_btn) {
-            client_pane.setVisible(false);
-            seller_pane.setVisible(false);
-            clients_list_pane.setVisible(false);
-            settings_pane.setVisible(false);
-            product_pane.setVisible(false);
-            client_pane2.setVisible(false);
-            add_product_pane.setVisible(false);
-            start_pane.setVisible(false);
-            author_pane.setVisible(false);
+            hideAllPanes();
             header_label.setText("Usuwanie produktu/usługi");
             productName.setCellValueFactory(new PropertyValueFactory<>("productName"));
             productMeasure.setCellValueFactory(new PropertyValueFactory<>("productMeasure"));
@@ -338,28 +183,12 @@ public class InvoiceController {
             delete_product_pane.setVisible(true);
 
         } else if (event.getSource() == start_btn) {
-            client_pane.setVisible(false);
-            clients_list_pane.setVisible(false);
-            seller_pane.setVisible(false);
-            settings_pane.setVisible(false);
-            product_pane.setVisible(false);
-            client_pane2.setVisible(false);
-            add_product_pane.setVisible(false);
-            delete_product_pane.setVisible(false);
-            author_pane.setVisible(false);
+            hideAllPanes();
             header_label.setText("");
             start_pane.setVisible(true);
 
         } else if (event.getSource() == author_btn) {
-            client_pane.setVisible(false);
-            clients_list_pane.setVisible(false);
-            seller_pane.setVisible(false);
-            settings_pane.setVisible(false);
-            product_pane.setVisible(false);
-            client_pane2.setVisible(false);
-            add_product_pane.setVisible(false);
-            delete_product_pane.setVisible(false);
-            start_pane.setVisible(false);
+            hideAllPanes();
             header_label.setText("O autorze");
             author_pane.setVisible(true);
 
@@ -382,15 +211,7 @@ public class InvoiceController {
                 c.printStackTrace();
             }
             clients_list.addAll(clients);
-            client_pane.setVisible(false);
-            seller_pane.setVisible(false);
-            settings_pane.setVisible(false);
-            product_pane.setVisible(false);
-            client_pane2.setVisible(false);
-            add_product_pane.setVisible(false);
-            delete_product_pane.setVisible(false);
-            start_pane.setVisible(false);
-            author_pane.setVisible(false);
+            hideAllPanes();
             clientName.setCellValueFactory(new PropertyValueFactory<>("name"));
             clientID.setCellValueFactory(new PropertyValueFactory<>("id"));
             see_clients.setItems(clients_list);
@@ -528,7 +349,8 @@ public class InvoiceController {
 
     public void generateInvoice() {
         try {
-            invoice.generate();
+            InvoiceToPDF invoiceToPDF = new InvoiceToPDF(invoice);
+            invoiceToPDF.generate();
             generate_status.setText("Faktura gotowa!");
             generate_status.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.rgb(178, 252, 251), new CornerRadii(5), null)));
             generate_status.setStyle("-fx-text-fill: black");
